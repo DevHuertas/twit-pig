@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<style type="text/css">
+		html,body
+		{
+			width: 100%;
+			height: 100%;
+		    padding:0;
+		    margin:0;
+		}
+
+		#pigpen{
+			width: 100%;
+			height: 100%;
+			padding: 0;
+			margin: 0;
+			
+		}
+		.pigcontainer{
+			position: absolute;
+			display: none;
+			z-index: 1;
+		}
+		.msg{
+			font-size:1em;
+		}
+		.screenname{
+			font-size:2em;
+		}
+		.pig{
+			
+			width:137px;
+			height:144px;
+
+		}
+	</style>
+</head>
+<body>
+<div id="pigpen"></div>
+<script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.0.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+	$(document).ready(function(){
+
+		var pen = $("#pigpen");
+		var pigsrc = "http://www.animateit.net/data/media/18/Pig_flies_2.gif";
+		var pigs = {};
+
+		function Pig(id){
+			return {
+				"id": id,
+				"asDiv": function(){return '<div id="'+this.id+'" class="pigcontainer"><div class="msg">hi</div><div class="pig"><img src="'+pigsrc+'"></div><div class="screenname"></div></div>';}
+			}
+		}
+
+		function addPig(name,screen_name,latin)
+		{
+			console.log("Adding a pig");
+
+			var pig = null;
+			var pigDiv  = null;
+			var x = Math.floor(Math.random()*$(window).height())+200;
+			var y = Math.floor(Math.random()*$(window).width())-200;
+
+
+			console.log(x);
+			console.log(y);
+			if(name in pigs){
+				pig = pigs[name];
+			}else{
+				pig = Pig(name);
+				pigs[name] = pig;
+			}
+
+
+
+			console.log(pig.asDiv());
+			pen.append(pig.asDiv());
+			pigDiv = $('#'+pig.id);
+			pigNameDiv = $('#'+pig.id+" .screenname");
+			msgDiv = $('#'+pig.id+" .msg");
+
+			console.log(pigNameDiv);
+			pigNameDiv.text(screen_name);
+			msgDiv.text(latin);
+			pigDiv.css('top',x+"px");
+			pigDiv.css('left',y+"px");
+			pigDiv.show();
+			console.log(pigDiv);
+
+		}
+
+	
+
+		var socket = io.connect('http://localhost');
+	  			socket.on('twitter_update', function (data) {
+	    		console.log(data);
+	    		addPig('one','two','three');
+	    		//addPig(data['name'],data['screen_name'],data['piglatin']);
+		});	
+
+
+	});
+/*	
+	window.requestAnimFrame = (function(){
+	            return  window.requestAnimationFrame       || 
+	                    window.webkitRequestAnimationFrame || 
+	                    window.mozRequestAnimationFrame    || 
+	                    window.oRequestAnimationFrame      || 
+	                    window.msRequestAnimationFrame     || 
+	                    function( callback ){
+	                        window.setTimeout(callback, 1000 / 60);
+	                    };
+	})();
+	
+	var users = {};
+
+
+	var pen = $("#pigpen");
+
+	function addPig()
+	{
+		console.log("Adding a pig");
+		var pig = Pig('first');
+		var pigDiv  = null;
+		var x = 200;
+		var y = 300;
+
+		pen.appendTo(pig.asDiv());
+		pigDiv = $('#'+pig._id);
+		pigDiv.css('top',x);
+		pigDiv.css('left',y);
+		pigDiv.show();
+
+	}
+
+	function Pig(id){
+		return {
+			_id: id,
+			asDiv: function(){return '<div id='+this.id+' class="pig"><img src="/img/Pig.gif"></div>';}
+		}
+	}
+
+	var socket = io.connect('http://localhost');
+	  socket.on('twitter_update', function (data) {
+	    console.log(data);
+	    addPig();
+	});*/
+
+</script>
+
+</body>
+</html>
