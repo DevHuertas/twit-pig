@@ -4,15 +4,15 @@ var app = require('http').createServer(handler);
 var io = require('socket.io').listen(app);
 var fs = require('fs');
 io.set('transports', [
-		      'flashsocket', 
-		      'htmlfile', 
-		      'xhr-polling', 
+		      'flashsocket',
+		      'htmlfile',
+		      'xhr-polling',
 		      'jsonp-polling']);
 
 
 app.listen(process.env.PORT || 1337);
 
-function handler (req, res) 
+function handler (req, res)
 {
     fs.readFile(__dirname + '/index.html',
 		function (err, data) {
@@ -33,7 +33,7 @@ io.sockets.on('connection', function (socket) {
 		access_token_key: '1317035634-B13JWlxa6dDa9RgLXFqvSf2Tn5ecOLNq5NT0rA5',
 		access_token_secret: 'SGHk71sXiBtZ5HKJ0sgCjqR7MqbtyQchR8SPQmL1rg'
 	    });
-	
+
 	//create stream
 	stream.stream();
 
@@ -53,14 +53,20 @@ io.sockets.on('connection', function (socket) {
     });
 
 function parseTwitterJson(json) {
-    var dict = {};
-    if (json.user){
-	dict['screen_name'] = json.user.screen_name;
-	dict['name'] = json.user.name;
-	dict['message'] = json.text;
-	dict['created'] = json.created_at;
-    }
-    
-    return dict;
+  var dict = {};
+  if (json.user){
+    dict['screen_name'] = json.user.screen_name;
+    dict['name'] = json.user.name;
+    dict['message'] = json.text;
+    dict['piglatin'] = makePigLatin(json.text);
+    dict['created'] = json.created_at;
+  }
+
+  return dict;
 }
 
+function makePigLatin(s) {
+  s = s.replace(/\b([aeiou][a-z]*)\b/gi, "$1way");
+  s = s.replace(/\b([bcdfghjklmnpqrstvwxy]+)([a-z]*)\b/gi, "$2$1ay");
+  return s;
+}
