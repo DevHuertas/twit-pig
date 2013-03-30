@@ -54,6 +54,17 @@
 <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.0.js"></script>
 <script src="/socket.io/socket.io.js"></script>
 <script>
+	window.requestAnimFrame = (function(){
+	            return  window.requestAnimationFrame       || 
+	                    window.webkitRequestAnimationFrame || 
+	                    window.mozRequestAnimationFrame    || 
+	                    window.oRequestAnimationFrame      || 
+	                    window.msRequestAnimationFrame     || 
+	                    function( callback ){
+	                        window.setTimeout(callback, 1000 / 60);
+	                    };
+	})();
+
 	$(document).ready(function(){
 
 		var pen = $("#pigpen");
@@ -63,13 +74,34 @@
 		var pigs = {};
 
 		function Pig(id,name,x,y){
-			return {
+			var that= {
 				"id": id,
 				"name":name,
 				"x":x,
 				"y":y,
-				"asDiv": function(){return '<div id="'+this.id+'" class="pigcontainer"><div class="msg">hi</div><div class="pig"><img src="'+pigsrc+'"></div><div class="screenname"></div></div>';}
+				"speed": Math.floor(Math.random()*10)+1,
+				"asDiv": function(){return '<div id="'+this.id+'" class="pigcontainer"><div class="msg">hi</div><div class="pig"><img src="'+pigsrc+'"></div><div class="screenname"></div></div>';},
+				"move":function(e){
+				var px = that.x + that.speed;
+				if(px>$(window).width()){
+					px=0;
+				}
+				var py = that.y + 1;
+				console.log("here");
+				
+
+				
+				$('#'+that.id).css('left',px+"px");	
+
+				that.x = px;
+				
+				
+
+				window.requestAnimFrame(that.move);
+				
 			}
+		}
+			return that;
 		}
 
 		function addPig(name,screen_name,latin)
@@ -109,15 +141,21 @@
 			pigDiv.css('left',y+"px");
 			pigDiv.show();
 			console.log(pigDiv);
+			
+
+			window.requestAnimFrame(pig.move);
 
 		}
 
-
+addPig("two","three","a b vgh jhg jhg jhg jhg jhg jhgjhjhgjgjhgj jhgjgjhgjgjhgj gjhgjhgjhhjg");
+	addPig("one","two","a b vgh jhg jhg jhg jhg jhg jhgjhjhgjgjhgj jhgjgjhgjgjhgj gjhgjhgjhhjg");
+		/*
 		var socket = io.connect();
 	  			socket.on('twitter_update', function (data) {
 	    		console.log(data);
 	    		addPig(data['name'],data['screen_name'],data['piglatin']);
 		});	
+*/
 
 	});
 
