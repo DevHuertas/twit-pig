@@ -3,6 +3,13 @@ var Stream = require('user-stream');
 var app = require('http').createServer(handler);
 var io = require('socket.io').listen(app);
 var fs = require('fs');
+io.set('transports', [
+		      'flashsocket', 
+		      'htmlfile', 
+		      'xhr-polling', 
+		      'jsonp-polling']);
+
+
 app.listen(process.env.PORT || 1337);
 
 function handler (req, res) 
