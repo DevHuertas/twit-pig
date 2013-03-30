@@ -23,10 +23,23 @@
 			z-index: 1;
 		}
 		.msg{
-			font-size:1em;
+			font-family: "Helvetica Neue",Arial,sans-serif;
+			font-size: 14px;
+			line-height: 18px;
+			color: #333;
+			width: 200px;
+			height: 80px;
+			min-height: 20px;
+			padding: 12px;
+			background-color: white;
+			border: 1px solid #e8e8e8;
+			-webkit-border-radius: 5px 5px 5px 5px;
+			border-radius: 5px 5px 5px 5px;
 		}
 		.screenname{
 			font-size:2em;
+			color: #0084B4;
+			font-weight: normal;
 		}
 		.pig{
 			
@@ -66,8 +79,8 @@
 			var pig = null;
 			var pigid = "pig"+screen_name_count;
 			var pigDiv  = null;
-			var x = Math.floor(Math.random()*$(window).height())+200;
-			var y = Math.floor(Math.random()*$(window).width())-200;
+			var x = Math.floor(Math.random()*($(window).height()-300));
+			var y = Math.floor(Math.random()*($(window).width()-300));
 
 
 			console.log(x);
@@ -99,14 +112,12 @@
 
 		}
 
-	
 
-		var socket = io.connect('http://localhost');
+		var socket = io.connect();
 	  			socket.on('twitter_update', function (data) {
 	    		console.log(data);
 	    		addPig(data['name'],data['screen_name'],data['piglatin']);
 		});	
-
 
 	});
 
