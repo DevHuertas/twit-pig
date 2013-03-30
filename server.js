@@ -14,7 +14,7 @@ app.listen(process.env.PORT || 1337);
 
 function handler (req, res)
 {
-    fs.readFile(__dirname + '/index.html',
+    fs.readFile(__dirname + '/debug.html',
 		function (err, data) {
 		    if (err) {
 			res.writeHead(500);
